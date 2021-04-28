@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="Taxi.Prism.Views.EndTripPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:i18n="clr-namespace:Taxi.Prism.Helpers"
+    xmlns:prism="http://prismlibrary.com"
+    xmlns:skiarate="clr-namespace:SkiaRate;assembly=SkiaRate.Forms"
+    Title="{Binding Title}"
+    prism:ViewModelLocator.AutowireViewModel="True"
+    BackgroundColor="{StaticResource ColorBackgroud}">
+
+    <AbsoluteLayout>
+        <StackLayout
+            Padding="5"
+            AbsoluteLayout.LayoutBounds="0,0,1,1"
+            AbsoluteLayout.LayoutFlags="All">
+            <ScrollView>
+                <StackLayout>
+                    <skiarate:RatingView
+                        Margin="0,5"
+                        ColorOn="{StaticResource accent}"
+                        Count="5"
+                        HeightRequest="25"
+                        HorizontalOptions="Center"
+                        RatingType="Full"
+                        Value="{Binding Qualification}" />
+
+                    <StackLayout HorizontalOptions="Center" Orientation="Horizontal">
+                        <Label
+                            FontAttributes="Bold"
+                            FontSize="Large"
+                            Text="{i18n:Translate Qualification}" />
+                        <Label
+                            FontAttributes="Bold"
+                            FontSize="Large"
+                            Text="{Binding Qualification, StringFormat='{0:N2}'}" />
+                    </StackLayout>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="3*" />
+                        </Grid.ColumnDefinitions>
+                        <Label
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Text="{i18n:Translate GenericComment}"
+                            VerticalOptions="Center" />
+                        <Picker
+                            Title="{i18n:Translate CommnetPlaceHolder}"
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            ItemDisplayBinding="{Binding Name}"
+                            ItemsSource="{Binding Comments}"
+                            SelectedItem="{Binding Comment}" />
+
+                        <Label
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Text="{i18n:Translate Comment}"
+                            VerticalOptions="Center" />
+                        <Editor
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            HeightRequest="150"
+                            Text="{Binding Remark}" />
+
+                        <Label
+                            Grid.Row="2"
+                            Grid.Column="0"
+                            Text="{i18n:Translate DistanceTraveled}"
+                            VerticalOptions="Center" />
+                        <Label
+                            Grid.Row="2"
+                            Grid.Column="1"
+                            FontAttributes="Bold"
+                            FontSize="Medium"
+                            Text="{Binding Distance, StringFormat='{0:N2}'}"
+                            VerticalTextAlignment="Center" />
+
+                        <Label
+                            Grid.Row="3"
+                            Grid.Column="0"
+                            Text="{i18n:Translate Time}"
+                            VerticalOptions="Center" />
+                        <Label
+                            Grid.Row="3"
+                            Grid.Column="1"
+                            FontAttributes="Bold"
+                            FontSize="Medium"
+                            Text="{Binding Time}"
+                            VerticalTextAlignment="Center" />
+
+                        <Label
+                            Grid.Row="4"
+                            Grid.Column="0"
+                            Text="{i18n:Translate ApproximateValue}"
+                            VerticalOptions="Center" />
+                        <Label
+                            Grid.Row="4"
+                            Grid.Column="1"
+                            FontAttributes="Bold"
+                            FontSize="Medium"
+                            Text="{Binding Value}"
+                            VerticalTextAlignment="Center" />
+                    </Grid>
+                </StackLayout>
+            </ScrollView>
+            <Button
+                Command="{Binding EndTripCommand}"
+                IsEnabled="{Binding IsEnabled}"
+                Text="{i18n:Translate EndTrip}"
+                VerticalOptions="EndAndExpand" />
+        </StackLayout>
+        <ActivityIndicator
+            AbsoluteLayout.LayoutBounds=".5,.5,.5,.5"
+            AbsoluteLayout.LayoutFlags="All"
+            BackgroundColor="{StaticResource ColorAccent}"
+            HorizontalOptions="Center"
+            IsVisible="{Binding IsRunning}"
+            VerticalOptions="Center" />
+    </AbsoluteLayout>
+</ContentPage>

@@ -7,6 +7,7 @@ using Xamarin.Essentials.Implementation;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using Taxi.Common.Services;
+using Taxi.Common.Helpers;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace Taxi.Prism
@@ -36,6 +37,9 @@ namespace Taxi.Prism
             containerRegistry.RegisterForNavigation<NavigationPage>();
             containerRegistry.Register<IGeolocatorService, GeolocatorService>();
             containerRegistry.Register<IApiService, ApiService>();
+            containerRegistry.Register<IFilesHelper, FilesHelper>();
+            containerRegistry.Register<IRegexHelper, RegexHelper>();
+
             containerRegistry.RegisterForNavigation<HomePage, HomePageViewModel>();
             containerRegistry.RegisterForNavigation<TaxiMasterDetailPage, TaxiMasterDetailPageViewModel>();
             containerRegistry.RegisterForNavigation<TaxiHistoryPage, TaxiHistoryPageViewModel>();
@@ -44,6 +48,12 @@ namespace Taxi.Prism
             containerRegistry.RegisterForNavigation<ReportPage, ReportPageViewModel>();
             containerRegistry.RegisterForNavigation<LoginPage, LoginPageViewModel>();
             containerRegistry.RegisterForNavigation<TripDetailPage, TripDetailPageViewModel>();
+            containerRegistry.RegisterForNavigation<RegisterPage, RegisterPageViewModel>();
+            containerRegistry.RegisterForNavigation<RememberPasswordPage, RememberPasswordPageViewModel>();
+            containerRegistry.RegisterForNavigation<ChangePasswordPage, ChangePasswordPageViewModel>();
+            containerRegistry.RegisterForNavigation<StartTripPage, StartTripPageViewModel>();
+            containerRegistry.RegisterForNavigation<EndTripPage, EndTripPageViewModel>();
+
         }
     }
 }
