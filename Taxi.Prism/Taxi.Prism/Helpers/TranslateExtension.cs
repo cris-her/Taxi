@@ -32,7 +32,7 @@ namespace Taxi.Prism.Helpers
                 return "";
             }
 
-            var translation = ResMgr.Value.GetString(Text, ci);
+            string translation = ResMgr.Value.GetString(Text, ci);
 
             if (translation == null)
             {

@@ -7,6 +7,7 @@ using Taxi.Common.Helpers;
 using Taxi.Common.Models;
 using Taxi.Common.Services;
 using Taxi.Prism.Helpers;
+using Xamarin.Essentials;
 using Xamarin.Forms.Maps;
 
 namespace Taxi.Prism.ViewModels
@@ -113,19 +114,16 @@ namespace Taxi.Prism.ViewModels
             IsRunning = true;
             IsEnabled = false;
 
-            string url = App.Current.Resources["UrlAPI"].ToString();
-            if (!_apiService.CheckConnection())
+            if (Connectivity.NetworkAccess != NetworkAccess.Internet)
             {
                 IsRunning = false;
                 IsEnabled = true;
-                await App.Current.MainPage.DisplayAlert(
-                    Languages.Error,
-                    Languages.ConnectionError,
-                    Languages.Accept);
+                await App.Current.MainPage.DisplayAlert(Languages.Error, Languages.ConnectionError, Languages.Accept);
                 return;
             }
 
             TokenResponse token = JsonConvert.DeserializeObject<TokenResponse>(Settings.Token);
+            string url = App.Current.Resources["UrlAPI"].ToString();
             Response response = await _apiService.GetTripAsync(url, "api", "/Trips", id, "bearer", token.Token);
 
             IsRunning = false;
@@ -144,7 +142,14 @@ namespace Taxi.Prism.ViewModels
             TripSummary tripSummary = GeoHelper.GetTripSummary(trip);
             Distance = tripSummary.Distance;
             Time = $"{tripSummary.Time.ToString().Substring(0, 8)}";
-            Value = $"{tripSummary.Value:C0}";
+            if (tripSummary.Value == 5600)
+            {
+                Value = $"{tripSummary.Value:C0}";
+            }
+            else
+            {
+                Value = $"{tripSummary.Value:C0}";
+            }
         }
 
         private async void EndTripAsync()
@@ -158,8 +163,7 @@ namespace Taxi.Prism.ViewModels
             IsRunning = true;
             IsEnabled = false;
 
-            string url = App.Current.Resources["UrlAPI"].ToString();
-            if (!_apiService.CheckConnection())
+            if (Connectivity.NetworkAccess != NetworkAccess.Internet)
             {
                 IsRunning = false;
                 IsEnabled = true;
@@ -195,6 +199,7 @@ namespace Taxi.Prism.ViewModels
                 TripId = _tripId
             };
 
+            string url = App.Current.Resources["UrlAPI"].ToString();
             _apiService.CompleteTripAsync(url, "/api", "/Trips/CompleteTrip", completeTripRequest, "bearer", token.Token);
             await _navigationService.GoBackToRootAsync();
         }

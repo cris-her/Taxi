@@ -10,6 +10,7 @@ using Taxi.Common.Models;
 using Taxi.Web.Data;
 using Taxi.Web.Data.Entities;
 using Taxi.Web.Helpers;
+using Taxi.Web.Resources;
 
 namespace Taxi.Web.Controllers.API
 {
@@ -49,8 +50,9 @@ namespace Taxi.Web.Controllers.API
                 });
             }
 
-            //CultureInfo cultureInfo = new CultureInfo(request.CultureInfo);
-            //Resource.Culture = cultureInfo;
+
+            CultureInfo cultureInfo = new CultureInfo(request.CultureInfo);
+            Resource.Culture = cultureInfo;
 
             UserEntity user = await _userHelper.GetUserAsync(request.Email);
             if (user != null)
@@ -121,8 +123,8 @@ namespace Taxi.Web.Controllers.API
                 });
             }
 
-            //CultureInfo cultureInfo = new CultureInfo(request.CultureInfo);
-            //Resource.Culture = cultureInfo;
+            CultureInfo cultureInfo = new CultureInfo(request.CultureInfo);
+            Resource.Culture = cultureInfo;
 
             UserEntity user = await _userHelper.GetUserAsync(request.Email);
             if (user == null)
@@ -155,8 +157,8 @@ namespace Taxi.Web.Controllers.API
                 return BadRequest(ModelState);
             }
 
-            //CultureInfo cultureInfo = new CultureInfo(request.CultureInfo);
-            //Resource.Culture = cultureInfo;
+            CultureInfo cultureInfo = new CultureInfo(request.CultureInfo);
+            Resource.Culture = cultureInfo;
 
             UserEntity userEntity = await _userHelper.GetUserAsync(request.Email);
             if (userEntity == null)
@@ -202,8 +204,8 @@ namespace Taxi.Web.Controllers.API
                 });
             }
 
-            //CultureInfo cultureInfo = new CultureInfo(request.CultureInfo);
-            //Resource.Culture = cultureInfo;
+            CultureInfo cultureInfo = new CultureInfo(request.CultureInfo);
+            Resource.Culture = cultureInfo;
 
             UserEntity user = await _userHelper.GetUserAsync(request.Email);
             if (user == null)
@@ -242,8 +244,8 @@ namespace Taxi.Web.Controllers.API
                 return BadRequest();
             }
 
-            //CultureInfo cultureInfo = new CultureInfo(emailRequest.CultureInfo);
-            //Resource.Culture = cultureInfo;
+            CultureInfo cultureInfo = new CultureInfo(emailRequest.CultureInfo);
+            Resource.Culture = cultureInfo;
 
             UserEntity userEntity = await _userHelper.GetUserAsync(emailRequest.Email);
             if (userEntity == null)

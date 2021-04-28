@@ -4,42 +4,49 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:i18n="clr-namespace:Taxi.Prism.Helpers"
+    xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
     xmlns:prism="http://prismlibrary.com"
-    xmlns:rating="clr-namespace:Syncfusion.SfRating.XForms;assembly=Syncfusion.SfRating.XForms"
+    xmlns:skiarate="clr-namespace:SkiaRate;assembly=SkiaRate.Forms"
     Title="{Binding Title}"
+    ios:Page.UseSafeArea="true"
     prism:ViewModelLocator.AutowireViewModel="True"
     BackgroundColor="{StaticResource ColorBackgroud}">
 
     <StackLayout Padding="5">
-        <Label
-            FontAttributes="Bold"
-            FontSize="48"
+        <skiarate:RatingView
+            Margin="0,5"
+            ColorOn="{StaticResource ColorDanger}"
+            Count="5"
+            HeightRequest="25"
             HorizontalOptions="Center"
-            Text="{Binding Taxi.Qualification, StringFormat='{0:N2}'}" />
+            IsEnabled="False"
+            RatingType="Full"
+            Value="{Binding Trip.Qualification}" />
+
         <StackLayout HorizontalOptions="Center" Orientation="Horizontal">
             <Label
                 FontAttributes="Bold"
                 FontSize="Large"
-                Text="Qualification" />
+                Text="{i18n:Translate Qualification}" />
             <Label
                 FontAttributes="Bold"
                 FontSize="Large"
                 Text="{Binding Trip.Qualification, StringFormat='{0:N2}'}" />
         </StackLayout>
         <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
             <Label
                 Grid.Row="0"
                 Grid.Column="0"
                 FontAttributes="Bold"
-                Text="StartDate" />
+                Text="{i18n:Translate StartDate}" />
             <Label
                 Grid.Row="0"
                 Grid.Column="1"
@@ -48,8 +55,7 @@
                 Grid.Row="1"
                 Grid.Column="0"
                 FontAttributes="Bold"
-                LineBreakMode="CharacterWrap"
-                Text="Remarks" />
+                Text="{i18n:Translate Remarks}" />
             <Label
                 Grid.Row="1"
                 Grid.Column="1"

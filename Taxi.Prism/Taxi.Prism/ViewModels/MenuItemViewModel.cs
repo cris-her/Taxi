@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Taxi.Common.Models;
 using Prism.Commands;
 using Prism.Navigation;
 using Taxi.Common.Helpers;
-using Taxi.Common.Models;
 
 namespace Taxi.Prism.ViewModels
 {
@@ -29,8 +26,14 @@ namespace Taxi.Prism.ViewModels
                 Settings.Token = null;
             }
 
-            await _navigationService.NavigateAsync($"/TaxiMasterDetailPage/NavigationPage/{PageName}");
+            if (IsLoginRequired && !Settings.IsLogin)
+            {
+                await _navigationService.NavigateAsync($"/TaxiMasterDetailPage/NavigationPage/LoginPage");
+            }
+            else
+            {
+                await _navigationService.NavigateAsync($"/TaxiMasterDetailPage/NavigationPage/{PageName}");
+            }
         }
     }
 }
-

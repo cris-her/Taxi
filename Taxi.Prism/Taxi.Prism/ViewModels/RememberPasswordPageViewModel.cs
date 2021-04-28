@@ -1,10 +1,11 @@
 ﻿using Prism.Commands;
 using Prism.Navigation;
+using System.Threading.Tasks;
 using Taxi.Common.Helpers;
 using Taxi.Common.Models;
 using Taxi.Common.Services;
 using Taxi.Prism.Helpers;
-using System.Threading.Tasks;
+using Xamarin.Essentials;
 
 namespace Taxi.Prism.ViewModels
 {
@@ -54,8 +55,7 @@ namespace Taxi.Prism.ViewModels
             IsRunning = true;
             IsEnabled = false;
 
-            string url = App.Current.Resources["UrlAPI"].ToString();
-            if (!_apiService.CheckConnection())
+            if (Connectivity.NetworkAccess != NetworkAccess.Internet)
             {
                 IsRunning = false;
                 IsEnabled = true;
@@ -69,6 +69,7 @@ namespace Taxi.Prism.ViewModels
                 CultureInfo = Languages.Culture
             };
 
+            string url = App.Current.Resources["UrlAPI"].ToString();
             Response response = await _apiService.RecoverPasswordAsync(url, "/api", "/Account/RecoverPassword", request);
 
             IsRunning = false;

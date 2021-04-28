@@ -2,9 +2,10 @@
 using Prism.Navigation;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using Taxi.Common.Models;
 using Taxi.Common.Services;
+using Taxi.Prism.Helpers;
+using Xamarin.Essentials;
 
 namespace Taxi.Prism.ViewModels
 {
@@ -14,9 +15,8 @@ namespace Taxi.Prism.ViewModels
         private readonly IApiService _apiService;
         private TaxiResponse _taxi;
         private DelegateCommand _checkPlaqueCommand;
-        private List<TripItemViewModel> _details;
-
-        public bool IsRunning { get; private set; }
+        private bool _isRunning;
+        private List<TripItemViewModel> _trips;
 
         public TaxiHistoryPageViewModel(
             INavigationService navigationService,
@@ -24,12 +24,13 @@ namespace Taxi.Prism.ViewModels
         {
             _navigationService = navigationService;
             _apiService = apiService;
-            Title = "Taxi History";
+            Title = Languages.TaxiHistory;
         }
-        public List<TripItemViewModel> Details
+
+        public List<TripItemViewModel> Trips
         {
-            get => _details;
-            set => SetProperty(ref _details, value);
+            get => _trips;
+            set => SetProperty(ref _trips, value);
         }
 
         public TaxiResponse Taxi
@@ -38,56 +39,56 @@ namespace Taxi.Prism.ViewModels
             set => SetProperty(ref _taxi, value);
         }
 
-        public string Plaque { get; set; }
+        public bool IsRunning
+        {
+            get => _isRunning;
+            set => SetProperty(ref _isRunning, value);
+        }
+
+        public string PlaqueLetters { get; set; }
+
+        public int? PlaqueNumbers { get; set; }
 
         public DelegateCommand CheckPlaqueCommand => _checkPlaqueCommand ?? (_checkPlaqueCommand = new DelegateCommand(CheckPlaqueAsync));
 
         private async void CheckPlaqueAsync()
         {
-            if (string.IsNullOrEmpty(Plaque))
+            if (string.IsNullOrEmpty(PlaqueLetters) || PlaqueNumbers == 0)
             {
                 await App.Current.MainPage.DisplayAlert(
-                    "Error",
-                    "You must enter a plaque.",
-                    "Accept");
-                return;
-            }
-
-            Regex regex = new Regex(@"^([A-Za-z]{3}\d{3})$");
-            if (!regex.IsMatch(Plaque))
-            {
-                await App.Current.MainPage.DisplayAlert(
-                    "Error",
-                    "The plaque must start with three letters and end with three numbers.",
-                    "Accept");
+                    Languages.Error,
+                    Languages.PlaqueError1,
+                    Languages.Accept);
                 return;
             }
 
             IsRunning = true;
-            var url = App.Current.Resources["UrlAPI"].ToString();
-            var connection = await _apiService.CheckConnectionAsync(url);
-            if (!connection)
+
+            if (Connectivity.NetworkAccess != NetworkAccess.Internet)
             {
                 IsRunning = false;
-                await App.Current.MainPage.DisplayAlert("Error", "Check the internet connection.", "Accept");
+                await App.Current.MainPage.DisplayAlert(
+                    Languages.Error,
+                    Languages.ConnectionError,
+                    Languages.Accept);
                 return;
             }
 
-            Response response = await _apiService.GetTaxiAsync(Plaque, url, "api", "/Taxis");
+            string url = App.Current.Resources["UrlAPI"].ToString();
+            Response response = await _apiService.GetTaxiAsync($"{PlaqueLetters}{PlaqueNumbers}", url, "api", "/Taxis");
             IsRunning = false;
-
 
             if (!response.IsSuccess)
             {
                 await App.Current.MainPage.DisplayAlert(
-                    "Error",
+                    Languages.Error,
                     response.Message,
-                    "Accept");
+                    Languages.Accept);
                 return;
             }
 
             Taxi = (TaxiResponse)response.Result;
-            Details = Taxi.Trips.Where(t => t.Qualification != 0).Select(t => new TripItemViewModel(_navigationService)
+            Trips = Taxi.Trips.Where(t => t.Qualification != 0).Select(t => new TripItemViewModel(_navigationService)
             {
                 EndDate = t.EndDate,
                 Id = t.Id,
@@ -103,8 +104,6 @@ namespace Taxi.Prism.ViewModels
                 TripDetails = t.TripDetails,
                 User = t.User
             }).OrderByDescending(t => t.StartDate).ToList();
-
         }
     }
 }
-

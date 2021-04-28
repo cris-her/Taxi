@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using Taxi.Prism.Interfaces;
+﻿using Taxi.Prism.Interfaces;
 using Taxi.Prism.Resources;
 using Xamarin.Forms;
 
@@ -9,13 +8,43 @@ namespace Taxi.Prism.Helpers
     {
         static Languages()
         {
-            CultureInfo ci = DependencyService.Get<ILocalize>().GetCurrentCultureInfo();
+            var ci = DependencyService.Get<ILocalize>().GetCurrentCultureInfo();
             Resource.Culture = ci;
             Culture = ci.Name;
             DependencyService.Get<ILocalize>().SetLocale(ci);
         }
 
         public static string Culture { get; set; }
+
+        public static string ChangePhotoNoTaxiUser => Resource.ChangePhotoNoTaxiUser;
+
+        public static string LoginFacebook => Resource.LoginFacebook;
+
+        public static string Incident => Resource.Incident;
+
+        public static string RemarksError => Resource.RemarksError;
+
+        public static string IncidentDescription => Resource.IncidentDescription;
+
+        public static string TripsOf => Resource.TripsOf;
+
+        public static string SendInvitation => Resource.SendInvitation;
+
+        public static string EmailSendInvitationPlaceHolder => Resource.EmailSendInvitationPlaceHolder;
+
+        public static string AddUserToMyGroup => Resource.AddUserToMyGroup;
+
+        public static string MyTrip => Resource.MyTrip;
+
+        public static string MyTrips => Resource.MyTrips;
+
+        public static string CancelTripConfirm => Resource.CancelTripConfirm;
+
+        public static string Confirmation => Resource.Confirmation;
+
+        public static string Yes => Resource.Yes;
+
+        public static string No => Resource.No;
 
         public static string QualificationError => Resource.QualificationError;
 
@@ -73,23 +102,71 @@ namespace Taxi.Prism.Helpers
 
         public static string UserUpdated => Resource.UserUpdated;
 
-        public static string Save => Resource.Save;
+        public static string Accept => Resource.Accept;
 
-        public static string ChangePassword => Resource.ChangePassword;
+        public static string ConnectionError => Resource.ConnectionError;
 
-        public static string PasswordRecover => Resource.PasswordRecover;
+        public static string Error => Resource.Error;
 
-        public static string ForgotPassword => Resource.ForgotPassword;
+        public static string PlaqueError1 => Resource.PlaqueError1;
 
-        public static string PictureSource => Resource.PictureSource;
+        public static string PlaqueError2 => Resource.PlaqueError2;
 
-        public static string Cancel => Resource.Cancel;
+        public static string TaxiHistory => Resource.TaxiHistory;
 
-        public static string FromCamera => Resource.FromCamera;
+        public static string Plaque => Resource.Plaque;
 
-        public static string FromGallery => Resource.FromGallery;
+        public static string PlaquePlaceHolder => Resource.PlaquePlaceHolder;
 
-        public static string Ok => Resource.Ok;
+        public static string CheckPlaque => Resource.CheckPlaque;
+
+        public static string Qualification => Resource.Qualification;
+
+        public static string NumberOfTrips => Resource.NumberOfTrips;
+
+        public static string Driver => Resource.Driver;
+
+        public static string StartDate => Resource.StartDate;
+
+        public static string Score => Resource.Score;
+
+        public static string Remarks => Resource.Remarks;
+
+        public static string Loading => Resource.Loading;
+
+        public static string StartTrip => Resource.StartTrip;
+
+        public static string NewTrip => Resource.NewTrip;
+
+        public static string SeeTaxiHistory => Resource.SeeTaxiHistory;
+
+        public static string AdminMyUserGroup => Resource.AdminMyUserGroup;
+
+        public static string ModifyUser => Resource.ModifyUser;
+
+        public static string ReportAnIncident => Resource.ReportAnIncident;
+
+        public static string LogIn => Resource.LogIn;
+
+        public static string TripDetail => Resource.TripDetail;
+
+        public static string Email => Resource.Email;
+
+        public static string EmailPlaceHolder => Resource.EmailPlaceHolder;
+
+        public static string EmailError => Resource.EmailError;
+
+        public static string Password => Resource.Password;
+
+        public static string PasswordError => Resource.PasswordError;
+
+        public static string PasswordPlaceHolder => Resource.PasswordPlaceHolder;
+
+        public static string Register => Resource.Register;
+
+        public static string LoginError => Resource.LoginError;
+
+        public static string Logout => Resource.Logout;
 
         public static string Address => Resource.Address;
 
@@ -125,68 +202,22 @@ namespace Taxi.Prism.Helpers
 
         public static string LastNameError => Resource.LastNameError;
 
-        public static string Logout => Resource.Logout;
+        public static string Ok => Resource.Ok;
 
-        public static string Email => Resource.Email;
+        public static string PictureSource => Resource.PictureSource;
 
-        public static string LoginError => Resource.LoginError;
+        public static string Cancel => Resource.Cancel;
 
-        public static string EmailPlaceHolder => Resource.EmailPlaceHolder;
+        public static string FromCamera => Resource.FromCamera;
 
-        public static string EmailError => Resource.EmailError;
+        public static string FromGallery => Resource.FromGallery;
 
-        public static string Password => Resource.Password;
+        public static string PasswordRecover => Resource.PasswordRecover;
 
-        public static string PasswordError => Resource.PasswordError;
+        public static string ForgotPassword => Resource.ForgotPassword;
 
-        public static string PasswordPlaceHolder => Resource.PasswordPlaceHolder;
+        public static string Save => Resource.Save;
 
-        public static string Register => Resource.Register;
-
-        public static string StartTrip => Resource.StartTrip;
-
-        public static string NewTrip => Resource.NewTrip;
-
-        public static string SeeTaxiHistory => Resource.SeeTaxiHistory;
-
-        public static string AdminMyUserGroup => Resource.AdminMyUserGroup;
-
-        public static string ModifyUser => Resource.ModifyUser;
-
-        public static string ReportAnIncident => Resource.ReportAnIncident;
-
-        public static string Login => Resource.LogIn;
-
-        public static string Plaque => Resource.Plaque;
-
-        public static string PlaquePlaceHolder => Resource.PlaquePlaceHolder;
-
-        public static string CheckPlaque => Resource.CheckPlaque;
-
-        public static string Qualification => Resource.Qualification;
-
-        public static string NumberOfTrips => Resource.NumberOfTrips;
-
-        public static string Driver => Resource.Driver;
-
-        public static string StartDate => Resource.StartDate;
-
-        public static string Score => Resource.Score;
-
-        public static string Remarks => Resource.Remarks;
-
-        public static string Loading => Resource.Loading;
-
-        public static string Accept => Resource.Accept;
-
-        public static string ConnectionError => Resource.ConnectionError;
-
-        public static string Error => Resource.Error;
-
-        public static string PlaqueError1 => Resource.PlaqueError1;
-
-        public static string PlaqueError2 => Resource.PlaqueError2;
-
-        public static string TaxiHistory => Resource.TaxiHistory;
+        public static string ChangePassword => Resource.ChangePassword;
     }
 }

@@ -1,11 +1,11 @@
-﻿using System.Threading.Tasks;
-using Taxi.Common.Services;
+﻿using Newtonsoft.Json;
 using Prism.Commands;
 using Prism.Navigation;
-using Taxi.Prism.Helpers;
-using Newtonsoft.Json;
-using Taxi.Common.Models;
+using System.Threading.Tasks;
 using Taxi.Common.Helpers;
+using Taxi.Common.Models;
+using Taxi.Common.Services;
+using Taxi.Prism.Helpers;
 
 namespace Taxi.Prism.ViewModels
 {
@@ -49,7 +49,7 @@ namespace Taxi.Prism.ViewModels
 
         private async void ChangePasswordAsync()
         {
-            var isValid = await ValidateDataAsync();
+            bool isValid = await ValidateDataAsync();
             if (!isValid)
             {
                 return;

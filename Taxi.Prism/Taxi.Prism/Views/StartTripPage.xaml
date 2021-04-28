@@ -4,9 +4,11 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:i18n="clr-namespace:Taxi.Prism.Helpers"
+    xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
     xmlns:maps="clr-namespace:Xamarin.Forms.Maps;assembly=Xamarin.Forms.Maps"
     xmlns:prism="http://prismlibrary.com"
     Title="{Binding Title}"
+    ios:Page.UseSafeArea="true"
     prism:ViewModelLocator.AutowireViewModel="True"
     BackgroundColor="{StaticResource ColorBackgroud}">
 
@@ -29,13 +31,26 @@
                     Grid.Column="0"
                     Text="{i18n:Translate Plaque}"
                     VerticalOptions="Center" />
-                <Entry
+                <StackLayout
                     Grid.Row="0"
                     Grid.Column="1"
-                    FontSize="48"
-                    HorizontalOptions="FillAndExpand"
-                    Placeholder="{i18n:Translate PlaquePlaceHolder}"
-                    Text="{Binding Plaque}" />
+                    Margin="0,0,100,0"
+                    Orientation="Horizontal">
+                    <Entry
+                        HorizontalOptions="FillAndExpand"
+                        MaxLength="3"
+                        Placeholder="ABC"
+                        Text="{Binding PlaqueLetters}"
+                        VerticalOptions="Center" />
+                    <Label Text="-" VerticalOptions="Center" />
+                    <Entry
+                        HorizontalOptions="FillAndExpand"
+                        Keyboard="Numeric"
+                        MaxLength="3"
+                        Placeholder="123"
+                        Text="{Binding PlaqueNumbers}"
+                        VerticalOptions="Center" />
+                </StackLayout>
                 <Label
                     Grid.Row="1"
                     Grid.Column="0"
@@ -53,6 +68,12 @@
                     <ImageButton Command="{Binding GetAddressCommand}" Source="ic_airport_shuttle" />
                 </StackLayout>
             </Grid>
+            <Slider
+                x:Name="MySlider"
+                Maximum=".4"
+                Minimum="0"
+                ValueChanged="MySlider_ValueChanged"
+                Value=".2" />
             <maps:Map x:Name="MyMap" MapType="Street" />
             <StackLayout Orientation="Horizontal">
                 <Button

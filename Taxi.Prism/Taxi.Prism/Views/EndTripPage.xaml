@@ -4,9 +4,11 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:i18n="clr-namespace:Taxi.Prism.Helpers"
+    xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
     xmlns:prism="http://prismlibrary.com"
     xmlns:skiarate="clr-namespace:SkiaRate;assembly=SkiaRate.Forms"
     Title="{Binding Title}"
+    ios:Page.UseSafeArea="true"
     prism:ViewModelLocator.AutowireViewModel="True"
     BackgroundColor="{StaticResource ColorBackgroud}">
 
@@ -19,13 +21,11 @@
                 <StackLayout>
                     <skiarate:RatingView
                         Margin="0,5"
-                        ColorOn="{StaticResource accent}"
+                        ColorOn="{StaticResource ColorDanger}"
                         Count="5"
                         HeightRequest="25"
-                        HorizontalOptions="Center"
                         RatingType="Full"
                         Value="{Binding Qualification}" />
-
                     <StackLayout HorizontalOptions="Center" Orientation="Horizontal">
                         <Label
                             FontAttributes="Bold"

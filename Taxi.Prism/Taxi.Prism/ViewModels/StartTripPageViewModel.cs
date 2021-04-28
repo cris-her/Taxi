@@ -4,7 +4,6 @@ using Prism.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Timers;
 using Taxi.Common.Helpers;
@@ -13,7 +12,6 @@ using Taxi.Common.Services;
 using Taxi.Prism.Helpers;
 using Taxi.Prism.Views;
 using Xamarin.Essentials;
-using Xamarin.Forms;
 using Xamarin.Forms.Maps;
 
 namespace Taxi.Prism.ViewModels
@@ -34,10 +32,11 @@ namespace Taxi.Prism.ViewModels
         private TokenResponse _token;
         private string _url;
         private Timer _timer;
-        private Geocoder _geoCoder;
-        private TripDetailsRequest _tripDetailsRequest;
+        private readonly Geocoder _geoCoder;
+        private readonly TripDetailsRequest _tripDetailsRequest;
         private DelegateCommand _getAddressCommand;
         private DelegateCommand _startTripCommand;
+        private DelegateCommand _cancelTripCommand;
 
         public StartTripPageViewModel(INavigationService navigationService, IGeolocatorService geolocatorService, IApiService apiService)
             : base(navigationService)
@@ -46,28 +45,27 @@ namespace Taxi.Prism.ViewModels
             _geolocatorService = geolocatorService;
             _apiService = apiService;
             _tripDetailsRequest = new TripDetailsRequest { TripDetails = new List<TripDetailRequest>() };
+            _geoCoder = new Geocoder();
             Title = Languages.StartTrip;
             ButtonLabel = Languages.StartTrip;
             IsEnabled = true;
             LoadSourceAsync();
         }
 
+        public DelegateCommand CancelTripCommand => _cancelTripCommand ?? (_cancelTripCommand = new DelegateCommand(CancelTripAsync));
+
         public DelegateCommand GetAddressCommand => _getAddressCommand ?? (_getAddressCommand = new DelegateCommand(LoadSourceAsync));
 
         public DelegateCommand StartTripCommand => _startTripCommand ?? (_startTripCommand = new DelegateCommand(StartTripAsync));
 
-        public string Plaque { get; set; }
+        public string PlaqueLetters { get; set; }
+
+        public int? PlaqueNumbers { get; set; }
 
         public bool IsSecondButtonVisible
         {
             get => _isSecondButtonVisible;
             set => SetProperty(ref _isSecondButtonVisible, value);
-        }
-
-        public string ButtonLabel
-        {
-            get => _source;
-            set => SetProperty(ref _source, value);
         }
 
         public bool IsRunning
@@ -80,6 +78,12 @@ namespace Taxi.Prism.ViewModels
         {
             get => _isEnabled;
             set => SetProperty(ref _isEnabled, value);
+        }
+
+        public string ButtonLabel
+        {
+            get => _source;
+            set => SetProperty(ref _source, value);
         }
 
         public string Source
@@ -95,6 +99,35 @@ namespace Taxi.Prism.ViewModels
             {
                 _timer.Start();
             }
+        }
+
+        private async void CancelTripAsync()
+        {
+            bool answer = await App.Current.MainPage.DisplayAlert(Languages.Confirmation, Languages.CancelTripConfirm, Languages.Yes, Languages.No);
+            if (!answer)
+            {
+                return;
+            }
+
+            IsRunning = true;
+            IsEnabled = false;
+
+            _timer.Stop();
+
+            if (Connectivity.NetworkAccess != NetworkAccess.Internet)
+            {
+                IsRunning = false;
+                IsEnabled = true;
+                await App.Current.MainPage.DisplayAlert(Languages.Error, Languages.ConnectionError, Languages.Accept);
+                return;
+            }
+
+            _apiService.DeleteAsync(_url, "/api", "/Trips", _tripResponse.Id, "bearer", _token.Token);
+
+            IsRunning = false;
+            IsEnabled = true;
+
+            await _navigationService.GoBackToRootAsync();
         }
 
         private async void LoadSourceAsync()
@@ -115,7 +148,7 @@ namespace Taxi.Prism.ViewModels
             IEnumerable<string> sources = await geoCoder.GetAddressesForPositionAsync(_position);
             List<string> addresses = new List<string>(sources);
 
-            if (addresses.Count > 1)
+            if (addresses.Count > 0)
             {
                 Source = addresses[0];
             }
@@ -146,15 +179,11 @@ namespace Taxi.Prism.ViewModels
             IsRunning = true;
             IsEnabled = false;
 
-            _url = App.Current.Resources["UrlAPI"].ToString();
-            if (!_apiService.CheckConnection())
+            if (Connectivity.NetworkAccess != NetworkAccess.Internet)
             {
                 IsRunning = false;
                 IsEnabled = true;
-                await App.Current.MainPage.DisplayAlert(
-                    Languages.Error,
-                    Languages.ConnectionError,
-                    Languages.Accept);
+                await App.Current.MainPage.DisplayAlert(Languages.Error, Languages.ConnectionError, Languages.Accept);
                 return;
             }
 
@@ -166,10 +195,11 @@ namespace Taxi.Prism.ViewModels
                 Address = Source,
                 Latitude = _geolocatorService.Latitude,
                 Longitude = _geolocatorService.Longitude,
-                Plaque = Plaque,
+                Plaque = $"{PlaqueLetters}{PlaqueNumbers}",
                 UserId = new Guid(_user.Id)
             };
 
+            _url = App.Current.Resources["UrlAPI"].ToString();
             Response response = await _apiService.NewTripAsync(_url, "/api", "/Trips", tripRequest, "bearer", _token.Token);
 
             if (!response.IsSuccess)
@@ -189,7 +219,7 @@ namespace Taxi.Prism.ViewModels
 
             _timer = new Timer
             {
-                Interval = 1000
+                Interval = 2000
             };
 
             _timer.Elapsed += Timer_Elapsed;
@@ -273,16 +303,12 @@ namespace Taxi.Prism.ViewModels
 
         private async Task<bool> ValidateDataAsync()
         {
-            if (string.IsNullOrEmpty(Plaque))
+            if (string.IsNullOrEmpty(PlaqueLetters) || PlaqueNumbers == 0)
             {
-                await App.Current.MainPage.DisplayAlert(Languages.Error, Languages.PlaqueError1, Languages.Accept);
-                return false;
-            }
-
-            Regex regex = new Regex(@"^([A-Za-z]{3}\d{3})$");
-            if (!regex.IsMatch(Plaque))
-            {
-                await App.Current.MainPage.DisplayAlert(Languages.Error, Languages.PlaqueError2, Languages.Accept);
+                await App.Current.MainPage.DisplayAlert(
+                    Languages.Error,
+                    Languages.PlaqueError1,
+                    Languages.Accept);
                 return false;
             }
 

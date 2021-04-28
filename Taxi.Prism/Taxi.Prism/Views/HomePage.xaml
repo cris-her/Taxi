@@ -3,19 +3,27 @@
     x:Class="Taxi.Prism.Views.HomePage"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:i18n="clr-namespace:Taxi.Prism.Helpers"
+    xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
     xmlns:maps="clr-namespace:Xamarin.Forms.Maps;assembly=Xamarin.Forms.Maps"
     xmlns:prism="http://prismlibrary.com"
     Title="{Binding Title}"
+    ios:Page.UseSafeArea="true"
     prism:ViewModelLocator.AutowireViewModel="True"
     BackgroundColor="{StaticResource ColorBackgroud}">
     <StackLayout>
+        <Slider
+            x:Name="MySlider"
+            Maximum=".4"
+            Minimum="0"
+            ValueChanged="MySlider_ValueChanged"
+            Value=".2" />
         <maps:Map x:Name="MyMap" MapType="Street" />
         <StackLayout Padding="5">
             <Button
                 Margin="10,0"
-                Style="{StaticResource SecondaryButton}"
-                Text="Start Trip" />
+                Command="{Binding StartTripCommand}"
+                Text="{i18n:Translate StartTrip}" />
         </StackLayout>
     </StackLayout>
-
 </ContentPage>

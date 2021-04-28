@@ -3,96 +3,126 @@
     x:Class="Taxi.Prism.Views.TaxiHistoryPage"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:i18n="clr-namespace:Taxi.Prism.Helpers"
+    xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
     xmlns:prism="http://prismlibrary.com"
     Title="{Binding Title}"
+    ios:Page.UseSafeArea="true"
     prism:ViewModelLocator.AutowireViewModel="True"
     BackgroundColor="{StaticResource ColorBackgroud}">
 
-    <StackLayout Padding="5">
-        <StackLayout Orientation="Horizontal">
-            <Label Text="Plaque" VerticalOptions="Center" />
-            <Entry
-                HorizontalOptions="FillAndExpand"
-                Placeholder="Enter plaque..."
-                Text="{Binding Plaque}"
-                VerticalOptions="Center" />
-            <Button
-                Margin="10,0"
-                Command="{Binding CheckPlaqueCommand}"
-                Text="Check Plaque" />
+    <AbsoluteLayout>
+        <StackLayout
+            Padding="5"
+            AbsoluteLayout.LayoutBounds="0,0,1,1"
+            AbsoluteLayout.LayoutFlags="All">
+            <StackLayout Orientation="Horizontal">
+                <Label Text="{i18n:Translate Plaque}" VerticalOptions="Center" />
+                <Entry
+                    HorizontalOptions="FillAndExpand"
+                    MaxLength="3"
+                    Placeholder="ABC"
+                    Text="{Binding PlaqueLetters}"
+                    VerticalOptions="Center" />
+                <Label Text="-" VerticalOptions="Center" />
+                <Entry
+                    HorizontalOptions="FillAndExpand"
+                    Keyboard="Numeric"
+                    MaxLength="3"
+                    Placeholder="123"
+                    Text="{Binding PlaqueNumbers}"
+                    VerticalOptions="Center" />
+                <Button Command="{Binding CheckPlaqueCommand}" Text="{i18n:Translate CheckPlaque}" />
+            </StackLayout>
+            <Label
+                FontAttributes="Bold"
+                FontSize="48"
+                HorizontalOptions="Center"
+                Text="{Binding Taxi.Qualification, StringFormat='{0:N2}'}" />
+            <StackLayout HorizontalOptions="Center" Orientation="Horizontal">
+                <Label
+                    FontAttributes="Bold"
+                    FontSize="Large"
+                    Text="{i18n:Translate Qualification}" />
+                <Label
+                    FontAttributes="Bold"
+                    FontSize="Large"
+                    Text="{Binding Taxi.Qualification, StringFormat='{0:N2}'}" />
+            </StackLayout>
+            <StackLayout Orientation="Horizontal">
+                <Label Text="{i18n:Translate NumberOfTrips}" />
+                <Label Text="{Binding Taxi.NumberOfTrips, StringFormat='{0:N0}'}" />
+            </StackLayout>
+            <StackLayout Orientation="Horizontal">
+                <Label Text="{i18n:Translate Driver}" />
+                <Label Text="{Binding Taxi.User.FullName, StringFormat='{0:N0}'}" />
+            </StackLayout>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width=".8*" />
+                    <ColumnDefinition Width=".5*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="48" />
+                </Grid.ColumnDefinitions>
+                <Label
+                    Grid.Column="0"
+                    FontAttributes="Bold"
+                    Text="{i18n:Translate StartDate}" />
+                <Label
+                    Grid.Column="1"
+                    FontAttributes="Bold"
+                    Text="{i18n:Translate Score}" />
+                <Label
+                    Grid.Column="2"
+                    FontAttributes="Bold"
+                    Text="{i18n:Translate Remarks}" />
+            </Grid>
+
+            <CollectionView ItemsSource="{Binding Trips}">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SelectTripCommand}" />
+                            </Grid.GestureRecognizers>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width=".8*" />
+                                <ColumnDefinition Width=".5*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Label
+                                Grid.Column="0"
+                                Text="{Binding StartDateLocal, StringFormat='{0:yyyy/MM/dd}'}"
+                                VerticalOptions="Center" />
+                            <Label
+                                Grid.Column="1"
+                                Text="{Binding Qualification, StringFormat='{0:N2}'}"
+                                VerticalOptions="Center" />
+                            <Label
+                                Grid.Column="2"
+                                LineBreakMode="TailTruncation"
+                                MaxLines="2"
+                                Text="{Binding Remarks}"
+                                VerticalOptions="Center" />
+                            <Image Grid.Column="3" Source="ic_more_vert" />
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
         </StackLayout>
-        <Label
-            FontAttributes="Bold"
-            FontSize="48"
+        <ActivityIndicator
+            AbsoluteLayout.LayoutBounds=".5,.5,.5,.5"
+            AbsoluteLayout.LayoutFlags="All"
+            BackgroundColor="{StaticResource ColorAccent}"
             HorizontalOptions="Center"
-            Text="{Binding Taxi.Qualification, StringFormat='{0:N2}'}" />
-        <StackLayout Orientation="Horizontal">
-            <Label Text="Number of trips:" />
-            <Label Text="{Binding Taxi.NumberOfTrips, StringFormat='{0:N0}'}" />
-        </StackLayout>
-        <StackLayout Orientation="Horizontal">
-            <Label Text="Driver:" />
-            <Label Text="{Binding Taxi.User.FullName, StringFormat='{0:N0}'}" />
-        </StackLayout>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width=".8*" />
-                <ColumnDefinition Width=".5*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="48" />
-            </Grid.ColumnDefinitions>
-            <Label
-                Grid.Column="0"
-                FontAttributes="Bold"
-                Text="Start Date" />
-            <Label
-                Grid.Column="1"
-                FontAttributes="Bold"
-                Text="Score" />
-            <Label
-                Grid.Column="2"
-                FontAttributes="Bold"
-                LineBreakMode="TailTruncation"
-                MaxLines="1"
-                Text="Remarks" />
-        </Grid>
-
-        <CollectionView ItemsSource="{Binding Details}">
-            <CollectionView.ItemsLayout>
-                <GridItemsLayout Orientation="Vertical" />
-            </CollectionView.ItemsLayout>
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Grid>
-                        <Grid.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding SelectTripCommand}" />
-                        </Grid.GestureRecognizers>
-
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width=".8*" />
-                            <ColumnDefinition Width=".5*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <Label
-                            Grid.Column="0"
-                            Text="{Binding StartDateLocal, StringFormat='{0:yyyy/MM/dd HH:mm}'}"
-                            VerticalOptions="Center" />
-                        <Label
-                            Grid.Column="1"
-                            Text="{Binding Qualification, StringFormat='{0:N2}'}"
-                            VerticalOptions="Center" />
-                        <Label
-                            Grid.Column="2"
-                            Text="{Binding Remarks}"
-                            VerticalOptions="Center" />
-                        <Image Grid.Column="3" Source="ic_more_vert" />
-                    </Grid>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
-    </StackLayout>
+            IsVisible="{Binding IsRunning}"
+            VerticalOptions="Center" />
+    </AbsoluteLayout>
 </ContentPage>

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Plugin.Geolocator;
 
@@ -17,7 +15,7 @@ namespace Taxi.Common.Services
             try
             {
                 var locator = CrossGeolocator.Current;
-                locator.DesiredAccuracy = 50;
+                locator.DesiredAccuracy = 30;
                 var location = await locator.GetPositionAsync();
                 Latitude = location.Latitude;
                 Longitude = location.Longitude;
@@ -30,4 +28,3 @@ namespace Taxi.Common.Services
         }
     }
 }
-

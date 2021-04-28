@@ -38,4 +38,3 @@ namespace Taxi.Prism.Helpers
         }
     }
 }
-

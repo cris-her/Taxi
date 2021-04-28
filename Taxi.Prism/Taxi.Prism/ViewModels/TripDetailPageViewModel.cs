@@ -1,5 +1,6 @@
 ﻿using Prism.Navigation;
 using Taxi.Common.Models;
+using Taxi.Prism.Helpers;
 
 namespace Taxi.Prism.ViewModels
 {
@@ -9,7 +10,7 @@ namespace Taxi.Prism.ViewModels
 
         public TripDetailPageViewModel(INavigationService navigationService) : base(navigationService)
         {
-            Title = "Tripv Detail";
+            Title = Languages.TripDetail;
         }
 
         public TripResponse Trip
