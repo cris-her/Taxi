@@ -1,0 +1,22 @@
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Warning"
+    }
+  },
+  "AllowedHosts": "*",
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=(localdb)\\MSSQLLocalDB;Database=Taxi;Trusted_Connection=True;MultipleActiveResultSets=true"
+  },
+  "Tokens": {
+    "Key": "asdfghjikbnvcgfdsvvgvwnoyny5wn5vg5vmhwmbwmt565mmchmcvn55566065mcfdmscfmlsbmlsbglrtfyhgcvgfxdgc",
+    "Issuer": "localhost",
+    "Audience": "users"
+  },
+  "Mail": {
+    "From": "__email__",
+    "Smtp": "smtp.gmail.com",
+    "Port": 587,
+    "Password": "__pass__"
+  }
+}
