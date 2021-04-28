@@ -9,7 +9,7 @@
         <ResourceDictionary>
 
             <!--  Parameters  -->
-            <x:String x:Key="UrlAPI">https://taxi-web-em7.conveyor.cloud/</x:String>
+            <x:String x:Key="UrlAPI">http://taxi-qualifier.somee.com/</x:String>
             <!--  Colors  -->
             <Color x:Key="ColorBackgroud">#FFFF05</Color>
             <Color x:Key="ColorPrimary">#3D3D3D</Color>
