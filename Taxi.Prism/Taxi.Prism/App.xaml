@@ -81,10 +81,7 @@
             </DataTemplate>
 
 
-
-
         </ResourceDictionary>
-
 
     </Application.Resources>
 </prism:PrismApplication>

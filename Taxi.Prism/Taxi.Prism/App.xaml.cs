@@ -20,7 +20,7 @@ namespace Taxi.Prism
         protected override async void OnInitialized()
         {
             InitializeComponent();
-            await NavigationService.NavigateAsync("/TaxiMasterDetailPage/NavigationPage/HomePage");
+            await NavigationService.NavigateAsync("TaxiMasterDetailPage/NavigationPage/HomePage");
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
