@@ -1,9 +1,15 @@
 ﻿using Newtonsoft.Json;
 using Prism.Commands;
 using Prism.Navigation;
+using System;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using Taxi.Common.Helpers;
 using Taxi.Common.Models;
 using Taxi.Common.Services;
+using Taxi.Prism.Helpers;
+using Taxi.Prism.Views;
+using Xamarin.Essentials;
 
 namespace Taxi.Prism.ViewModels
 {
@@ -16,14 +22,17 @@ namespace Taxi.Prism.ViewModels
         private string _password;
         private DelegateCommand _loginCommand;
         private DelegateCommand _registerCommand;
+        private DelegateCommand _forgotPasswordCommand;
 
-        public LoginPageViewModel(INavigationService navigationService, IApiService apiService) : base(navigationService)
+        public LoginPageViewModel(INavigationService navigationService, IApiService apiService)
+            : base(navigationService)
         {
             _navigationService = navigationService;
             _apiService = apiService;
-            Title = "LogIn";
+            Title = Languages.LogIn;
             IsEnabled = true;
         }
+        public DelegateCommand ForgotPasswordCommand => _forgotPasswordCommand ?? (_forgotPasswordCommand = new DelegateCommand(ForgotPasswordAsync));
 
         public DelegateCommand LoginCommand => _loginCommand ?? (_loginCommand = new DelegateCommand(LoginAsync));
 
@@ -53,32 +62,24 @@ namespace Taxi.Prism.ViewModels
         {
             if (string.IsNullOrEmpty(Email))
             {
-                await App.Current.MainPage.DisplayAlert(
-                    "Error",
-                    "EmailError",
-                    "Accept");
+                await App.Current.MainPage.DisplayAlert(Languages.Error, Languages.EmailError, Languages.Accept);
                 return;
             }
 
             if (string.IsNullOrEmpty(Password))
             {
-                await App.Current.MainPage.DisplayAlert(
-                    "Error",
-                    "PasswordError",
-                    "Accept");
+                await App.Current.MainPage.DisplayAlert(Languages.Error, Languages.PasswordError, Languages.Accept);
                 return;
             }
 
             IsRunning = true;
             IsEnabled = false;
 
-            string url = App.Current.Resources["UrlAPI"].ToString();
-            bool connection = await _apiService.CheckConnectionAsync(url);
-            if (!connection)
+            if (Connectivity.NetworkAccess != NetworkAccess.Internet)
             {
                 IsRunning = false;
                 IsEnabled = true;
-                await App.Current.MainPage.DisplayAlert("Error", "Connection Error", "Accept");
+                await App.Current.MainPage.DisplayAlert(Languages.Error, Languages.ConnectionError, Languages.Accept);
                 return;
             }
 
@@ -88,13 +89,14 @@ namespace Taxi.Prism.ViewModels
                 Username = Email
             };
 
+            string url = App.Current.Resources["UrlAPI"].ToString();
             Response response = await _apiService.GetTokenAsync(url, "Account", "/CreateToken", request);
 
             if (!response.IsSuccess)
             {
                 IsRunning = false;
                 IsEnabled = true;
-                await App.Current.MainPage.DisplayAlert("Error", "Login Error", "Accept");
+                await App.Current.MainPage.DisplayAlert(Languages.Error, Languages.LoginError, Languages.Accept);
                 Password = string.Empty;
                 return;
             }
@@ -102,7 +104,7 @@ namespace Taxi.Prism.ViewModels
             TokenResponse token = (TokenResponse)response.Result;
             EmailRequest emailRequest = new EmailRequest
             {
-                //CultureInfo = Languages.Culture,
+                CultureInfo = Languages.Culture,
                 Email = Email
             };
 
@@ -121,8 +123,14 @@ namespace Taxi.Prism.ViewModels
 
         }
 
-        private void RegisterAsync()
+        private async void RegisterAsync()
         {
+            await _navigationService.NavigateAsync(nameof(RegisterPage));
+        }
+
+        private async void ForgotPasswordAsync()
+        {
+            await _navigationService.NavigateAsync(nameof(RememberPasswordPage));
         }
     }
 }

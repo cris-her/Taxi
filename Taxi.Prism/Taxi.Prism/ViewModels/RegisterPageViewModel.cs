@@ -8,6 +8,7 @@ using Taxi.Common.Helpers;
 using Taxi.Common.Models;
 using Taxi.Common.Services;
 using Taxi.Prism.Helpers;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace Taxi.Prism.ViewModels
@@ -32,8 +33,7 @@ namespace Taxi.Prism.ViewModels
             INavigationService navigationService,
             IRegexHelper regexHelper,
             IApiService apiService,
-            IFilesHelper filesHelper)
-            : base(navigationService)
+            IFilesHelper filesHelper) : base(navigationService)
         {
             _navigationService = navigationService;
             _regexHelper = regexHelper;
@@ -96,8 +96,8 @@ namespace Taxi.Prism.ViewModels
 
             IsRunning = true;
             IsEnabled = false;
-            string url = App.Current.Resources["UrlAPI"].ToString();
-            if (!_apiService.CheckConnection())
+
+            if (Connectivity.NetworkAccess != NetworkAccess.Internet)
             {
                 IsRunning = false;
                 IsEnabled = true;
@@ -114,6 +114,7 @@ namespace Taxi.Prism.ViewModels
             User.PictureArray = imageArray;
             User.UserTypeId = Role.Id;
             User.CultureInfo = Languages.Culture;
+            string url = App.Current.Resources["UrlAPI"].ToString();
             Response response = await _apiService.RegisterUserAsync(url, "/api", "/Account", User);
             IsRunning = false;
             IsEnabled = true;
@@ -126,49 +127,6 @@ namespace Taxi.Prism.ViewModels
 
             await App.Current.MainPage.DisplayAlert(Languages.Ok, response.Message, Languages.Accept);
             await _navigationService.GoBackAsync();
-        }
-
-        private async void ChangeImageAsync()
-        {
-            await CrossMedia.Current.Initialize();
-
-            string source = await Application.Current.MainPage.DisplayActionSheet(
-                Languages.PictureSource,
-                Languages.Cancel,
-                null,
-                Languages.FromGallery,
-                Languages.FromCamera);
-
-            if (source == Languages.Cancel)
-            {
-                _file = null;
-                return;
-            }
-
-            if (source == Languages.FromCamera)
-            {
-                _file = await CrossMedia.Current.TakePhotoAsync(
-                    new StoreCameraMediaOptions
-                    {
-                        Directory = "Sample",
-                        Name = "test.jpg",
-                        PhotoSize = PhotoSize.Small,
-                    }
-                );
-            }
-            else
-            {
-                _file = await CrossMedia.Current.PickPhotoAsync();
-            }
-
-            if (_file != null)
-            {
-                Image = ImageSource.FromStream(() =>
-                {
-                    System.IO.Stream stream = _file.GetStream();
-                    return stream;
-                });
-            }
         }
 
         private async Task<bool> ValidateDataAsync()
@@ -234,6 +192,49 @@ namespace Taxi.Prism.ViewModels
             }
 
             return true;
+        }
+
+        private async void ChangeImageAsync()
+        {
+            await CrossMedia.Current.Initialize();
+
+            string source = await Application.Current.MainPage.DisplayActionSheet(
+                Languages.PictureSource,
+                Languages.Cancel,
+                null,
+                Languages.FromGallery,
+                Languages.FromCamera);
+
+            if (source == Languages.Cancel)
+            {
+                _file = null;
+                return;
+            }
+
+            if (source == Languages.FromCamera)
+            {
+                _file = await CrossMedia.Current.TakePhotoAsync(
+                    new StoreCameraMediaOptions
+                    {
+                        Directory = "Sample",
+                        Name = "test.jpg",
+                        PhotoSize = PhotoSize.Small,
+                    }
+                );
+            }
+            else
+            {
+                _file = await CrossMedia.Current.PickPhotoAsync();
+            }
+
+            if (_file != null)
+            {
+                Image = ImageSource.FromStream(() =>
+                {
+                    System.IO.Stream stream = _file.GetStream();
+                    return stream;
+                });
+            }
         }
     }
 }
