@@ -50,7 +50,6 @@ namespace Taxi.Web.Controllers.API
                 });
             }
 
-
             CultureInfo cultureInfo = new CultureInfo(request.CultureInfo);
             Resource.Culture = cultureInfo;
 
@@ -60,7 +59,7 @@ namespace Taxi.Web.Controllers.API
                 return BadRequest(new Response
                 {
                     IsSuccess = false,
-                    Message = "User Already Exists"
+                    Message = Resource.UserAlreadyExists
                 });
             }
 
@@ -99,13 +98,13 @@ namespace Taxi.Web.Controllers.API
                 token = myToken
             }, protocol: HttpContext.Request.Scheme);
 
-            _mailHelper.SendMail(request.Email, "Email confirmation", $"<h1>{"Email confirmation"}</h1>" +
-                $"{"To allow the user, please click on the link:"}</br></br><a href = \"{tokenLink}\">{"Confirm Email"}</a>");
+            _mailHelper.SendMail(request.Email, Resource.EmailConfirmationSubject, $"<h1>{Resource.EmailConfirmationSubject}</h1>" +
+                $"{Resource.EmailConfirmationBody}</br></br><a href = \"{tokenLink}\">{Resource.ConfirmEmail}</a>");
 
             return Ok(new Response
             {
                 IsSuccess = true,
-                Message = "A confirmation email was sent. Please confirm your email."
+                Message = Resource.EmailConfirmationSent
             });
         }
 
@@ -132,7 +131,7 @@ namespace Taxi.Web.Controllers.API
                 return BadRequest(new Response
                 {
                     IsSuccess = false,
-                    Message = "User doesn't exist"
+                    Message = Resource.UserNotFoundError
                 });
             }
 
@@ -144,12 +143,12 @@ namespace Taxi.Web.Controllers.API
             return Ok(new Response
             {
                 IsSuccess = true,
-                Message = "An email with instructions to change the password has been sent"
+                Message = Resource.RecoverPasswordEmailSent
             });
         }
 
         [HttpPut]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> PutUser([FromBody] UserRequest request)
         {
             if (!ModelState.IsValid)
@@ -163,7 +162,7 @@ namespace Taxi.Web.Controllers.API
             UserEntity userEntity = await _userHelper.GetUserAsync(request.Email);
             if (userEntity == null)
             {
-                return BadRequest("User doesn't exist");
+                return BadRequest(Resource.UserNotFoundError);
             }
 
             string picturePath = userEntity.PicturePath;
@@ -213,7 +212,7 @@ namespace Taxi.Web.Controllers.API
                 return BadRequest(new Response
                 {
                     IsSuccess = false,
-                    Message = "User doesn't exist"
+                    Message = Resource.UserNotFoundError
                 });
             }
 
@@ -230,7 +229,7 @@ namespace Taxi.Web.Controllers.API
             return Ok(new Response
             {
                 IsSuccess = true,
-                Message = "Your password has been changed succesfully"
+                Message = Resource.ChangePasswordSuccess
             });
         }
 
@@ -250,7 +249,7 @@ namespace Taxi.Web.Controllers.API
             UserEntity userEntity = await _userHelper.GetUserAsync(emailRequest.Email);
             if (userEntity == null)
             {
-                return NotFound("User doesn't exist");
+                return NotFound(Resource.UserNotFoundError);
             }
 
             return Ok(_converterHelper.ToUserResponse(userEntity));

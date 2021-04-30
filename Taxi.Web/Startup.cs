@@ -54,17 +54,16 @@ namespace Taxi.Web
                 .AddEntityFrameworkStores<DataContext>();
 
             services.AddAuthentication()
-            .AddCookie()
-            .AddJwtBearer(cfg =>
-            {
-               cfg.TokenValidationParameters = new TokenValidationParameters
-               {
-                   ValidIssuer = Configuration["Tokens:Issuer"],
-                   ValidAudience = Configuration["Tokens:Audience"],
-                   IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Tokens:Key"]))
-               };
-            });
-
+                .AddCookie()
+                .AddJwtBearer(cfg =>
+                {
+                   cfg.TokenValidationParameters = new TokenValidationParameters
+                   {
+                       ValidIssuer = Configuration["Tokens:Issuer"],
+                       ValidAudience = Configuration["Tokens:Audience"],
+                       IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Tokens:Key"]))
+                   };
+                });
 
             services.AddDbContext<DataContext>(cfg =>
             {
@@ -77,6 +76,7 @@ namespace Taxi.Web
             services.AddScoped<ICombosHelper, CombosHelper>();
             services.AddScoped<IImageHelper, ImageHelper>();
             services.AddScoped<IMailHelper, MailHelper>();
+            
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 

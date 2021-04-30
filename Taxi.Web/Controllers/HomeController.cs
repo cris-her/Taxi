@@ -45,6 +45,5 @@ namespace Taxi.Web.Controllers
         {
             return View();
         }
-
     }
 }

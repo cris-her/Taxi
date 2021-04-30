@@ -32,6 +32,7 @@ namespace Taxi.Web.Helpers
                 {
                     HtmlBody = body
                 };
+
                 message.Body = bodyBuilder.ToMessageBody();
 
                 using (SmtpClient client = new SmtpClient())
@@ -43,7 +44,6 @@ namespace Taxi.Web.Helpers
                 }
 
                 return new Response { IsSuccess = true };
-
             }
             catch (Exception ex)
             {

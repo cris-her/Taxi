@@ -38,7 +38,7 @@ namespace Taxi.Prism.ViewModels
             Title = Languages.ModifyUser;
             IsEnabled = true;
             User = JsonConvert.DeserializeObject<UserResponse>(Settings.User);
-            IsTaxiUser = User.LoginType == LoginType.Taxi;
+            IsTaxiUser = true;
             Image = User.PictureFullPath;
         }
 
