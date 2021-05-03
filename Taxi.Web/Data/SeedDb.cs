@@ -117,7 +117,7 @@ namespace Taxi.Web.Data
             UserEntity user = await _userHelper.GetUserAsync(email);
             if (user == null)
             {
-                string path = Path.Combine(Directory.GetCurrentDirectory(), $"wwwroot\\images\\Users", image);
+                string path = Path.Combine($"/images/Users", image);
                 //string imageId = await _blobHelper.UploadBlobAsync(path, "users");
 
                 user = new UserEntity

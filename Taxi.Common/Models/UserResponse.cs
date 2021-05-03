@@ -28,8 +28,8 @@ namespace Taxi.Common.Models
         
         //public LoginType LoginType { get; set; }
         public string PictureFullPath => string.IsNullOrEmpty(PicturePath)
-        ? "https://taxiwebcrisfiss.azurewebsites.net//images/noimage.png"
-        : $"https://taxiwebcrisfiss.azurewebsites.net{PicturePath.Substring(1)}";
+        ? "http://taxi-qualifier.somee.com//images/noimage.png"
+        : $"http://taxi-qualifier.somee.com{PicturePath.Substring(1)}";
 
     }
 }
