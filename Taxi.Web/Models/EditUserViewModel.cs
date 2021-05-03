@@ -38,7 +38,7 @@ namespace Taxi.Web.Models
         [Display(Name = "Picture")]
         public string PictureFullPath => string.IsNullOrEmpty(PicturePath)
             ? "http://taxi-qualifier.somee.com//images/noimage.png"
-            : PicturePath;
+            : $"http://taxi-qualifier.somee.com{PicturePath.Substring(1)}";
 
     }
 }

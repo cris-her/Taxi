@@ -8,7 +8,7 @@ namespace Taxi.Common.Models
         [EmailAddress]
         public string Email { get; set; }
 
-        //[Required]
+        [Required]
         public string CultureInfo { get; set; }
     }
 }

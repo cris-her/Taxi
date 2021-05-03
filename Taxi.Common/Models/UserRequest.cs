@@ -33,7 +33,7 @@ namespace Taxi.Common.Models
 
         public string PasswordConfirm { get; set; }
 
-        //[Required]
+        [Required]
         public string CultureInfo { get; set; }
     }
 }

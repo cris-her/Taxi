@@ -31,7 +31,7 @@ namespace Taxi.Web.Data.Entities
         [Display(Name = "Picture")]
         public string PictureFullPath => string.IsNullOrEmpty(PicturePath)
             ? "http://taxi-qualifier.somee.com//images/noimage.png"
-            : PicturePath;
+            : $"http://taxi-qualifier.somee.com{PicturePath.Substring(1)}";
 
         [Display(Name = "User Type")]
         public UserType UserType { get; set; }

@@ -12,7 +12,7 @@ namespace Taxi.Common.Models
         [Required]
         public string Email { get; set; }
 
-        //[Required]
+        [Required]
         public string CultureInfo { get; set; }
     }
 }
